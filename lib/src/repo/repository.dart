@@ -1,23 +1,34 @@
 import 'package:news_app/src/models/item_model.dart';
 import 'package:news_app/src/repo/api_provider.dart';
 import 'package:news_app/src/repo/db_provider.dart';
+import 'package:news_app/src/repo/sources.dart';
 
 class Repository{
-  final dbProvider = DbProvider();
-  final apiProvider = ApiProvider();
+
+List<Sources> sources = [
+DbProvider(),
+ApiProvider(),
+];
 
   fetchTopIds()async{
-return await apiProvider.fetchTopIds();
+return await sources[1].fetchTopIds();
   }
 
   fetchItem(int id) async{
-    ItemModel item = await dbProvider.fetchItem(id);
-    if(item !=null){
-      return item;
+    ItemModel item;
+var source;
+
+    for(source in sources){
+      item = await source.fetchItem(id);
+      if(item != null){
+        break;
+      }
     }
-    item = await apiProvider.fetchItem(id);
-    if(item !=null){
-      dbProvider.insertItem(item);
+
+    for(var origin in sources){
+      if(source != origin){
+      origin.insertItem(item);
+    }
     }
     return item;
 

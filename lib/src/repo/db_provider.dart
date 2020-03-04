@@ -1,12 +1,14 @@
 import 'package:news_app/repo/core/constants.dart';
 import 'package:news_app/src/models/item_model.dart';
+import 'package:news_app/src/repo/sources.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 
-class DbProvider{
+class DbProvider extends Sources{
 Database db;
+
 DbProvider(){
   init();
 }
@@ -61,5 +63,10 @@ fetchItem(int id)async{
   }
   return ItemModel.fromDb(data.first);
 }
+
+  @override
+  Future<List<int>> fetchTopIds() {
+    return null;
+  }
 
 }
